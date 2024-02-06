@@ -29,7 +29,19 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'price' => 'required|decimal:0,2',
+            'stock' => 'integer|min:0'
+        ]);
+
+        $article = new Article();
+        $article->name = $request->input('name');
+        $article->price = $request->input('price');
+        $article->stock = $request->input('stock');
+        $article->save();
+
+        return redirect()->route('article.index')->with('success', 'Artículo creado correctamente');
     }
 
     /**
@@ -45,7 +57,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        return view('article.edit', compact('article'));
     }
 
     /**
@@ -53,14 +65,32 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'price' => 'required|decimal:0,2',
+            'stock' => 'integer|min:0'
+        ]);
+
+        $article->name = $request->input('name');
+        $article->price = $request->input('price');
+        $article->stock = $request->input('stock');
+        $article->save();
+
+        return redirect()->route('article.index')->with('success', 'Artículo modificado correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Article $article)
+    public function destroy(String $id)
     {
-        //
+        $article = Article::find($id);
+
+        if ($article) {
+            $article->delete();
+            return redirect()->route('article.index')->with('success', 'Artículo eliminado correctamente');
+        } else {
+            return redirect()->route('article.index')->with('error', 'No se puede borrar. El artículo ya no existe.');
+        }
     }
 }
