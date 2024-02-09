@@ -82,15 +82,14 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(String $id)
+    public function destroy(String $id = null)
     {
         $article = Article::find($id);
-
         if ($article) {
             $article->delete();
             return redirect()->route('article.index')->with('success', 'Artículo eliminado correctamente');
         } else {
-            return redirect()->route('article.index')->with('error', 'No se puede borrar. El artículo ya no existe.');
+            return redirect()->route('article.index')->with('error', 'No se puede borrar porque el artículo ya no existe.');
         }
     }
 }
